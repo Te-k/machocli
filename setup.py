@@ -1,0 +1,35 @@
+from setuptools import setup
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+with open('requirements.txt') as f:
+    reqs = f.read().split('\n')
+    reqs.remove('')
+
+setup(
+    name='machocli',
+    version='0.1.1',
+    description='Mach-o analysis tool based on LIEF',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url='https://github.com/Te-k/machocli',
+    author='Tek',
+    author_email='tek@randhome.io',
+    keywords='malware',
+    include_package_data=True,
+    install_requires=reqs,
+    license='MIT',
+    python_requires='>=3.5',
+    packages=['machocli', 'machocli.plugins', 'machocli.lib'],
+    package_dir={'machocli.lib': 'machocli/lib'},
+    #package_data={'machocli': ['pecli/data/*.yar']},
+    entry_points= {
+        'console_scripts': [ 'machocli=machocli.main:main' ]
+    },
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ]
+)
