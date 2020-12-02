@@ -20,7 +20,10 @@ class PluginInfo(Plugin):
         Display all the information on a Macho file
         """
         print("{:15} {}".format("Type:", binary.header.cpu_type.name))
-        print("Entry point:\t0x%x" % binary.entrypoint)
+        try:
+            print("Entry point:\t0x%x" % binary.entrypoint)
+        except lief.not_found:
+            pass
         try:
             if binary.code_signature:
                 print("Has a signature")
@@ -84,6 +87,15 @@ class PluginInfo(Plugin):
                 print("{:35s} {}".format(f.name, f.binding_info.library.name))
             except lief.not_found:
                 print(f.name)
+
+        # Exports
+        if len(binary.exported_functions) > 0:
+            print("")
+            print("Exports")
+            print("=" * 80)
+            for f in binary.exported_functions:
+                print(f.name)
+
 
     def add_arguments(self, parser):
         parser.add_argument('--json', '-j', action='store_true', help='Show everything in JSON format')
