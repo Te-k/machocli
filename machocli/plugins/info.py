@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import hashlib
 import lief
+from machocli.lib.symhash import symhash
 from machocli.plugins.base import Plugin
 
 
@@ -52,6 +53,8 @@ class PluginInfo(Plugin):
         """
         Display all the information on a Macho file
         """
+        sh = symhash(binary)
+        print("{:15} {}".format("Symhash:", sh))
         print("{:15} {}".format("Type:", binary.header.cpu_type.name))
         try:
             s = self.find_section(binary, binary.entrypoint)
