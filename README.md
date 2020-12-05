@@ -23,6 +23,7 @@ optional arguments:
 ## Alternatives
 
 * [macholibre](https://github.com/aaronst/macholibre)
+* [MachOView](https://sourceforge.net/projects/machoview/)
 
 ## LICENSE
 

@@ -8,7 +8,16 @@ class PluginInfo(Plugin):
     name = "info"
     description = "Extract info from the MACH-O file"
 
-    def display_ar(flags):
+    def add_arguments(self, parser):
+        parser.add_argument('--json', '-j', action='store_true', help='Show everything in JSON format')
+        #parser.add_argument('--imports', '-i',  action='store_true', help='Display imports only')
+        #parser.add_argument('--exports', '-e',  action='store_true', help='Display exports only')
+        #parser.add_argument('--resources', '-r',  action='store_true', help='Display resources only')
+        #parser.add_argument('--full', '-f',  action='store_true', help='Full dump of all pefile infos')
+        self.parser = parser
+
+
+    def display_ar(self, flags):
         """
         Show access rights of a section
         """
@@ -92,20 +101,27 @@ class PluginInfo(Plugin):
         # Sections
         print("Sections")
         print("=" * 80)
-        print("{:16} {:9} {:12} {:9} {:9} {:25} {}".format( "Name", "Segname", "VirtAddr", "RawAddr", "Size", "type", "Md5"))
-        for s in binary.sections:
-            m = hashlib.md5()
-            m.update(bytearray(s.content))
-            print("{:16} {:9} {:12} {:9} {:<9} {:25} {}".format(
-                s.name,
-                s.segment.name,
-                hex(s.virtual_address),
-                hex(s.offset),
-                s.size,
-                str(s.type).replace("SECTION_TYPES.", ""),
-                m.hexdigest()
-                ))
-        print("")
+        segments = set([s.segment for s in binary.sections])
+        for seg in segments:
+            print("="*10 + " {} ({} - {})".format(
+                seg.name,
+                self.display_ar(seg.init_protection),
+                self.display_ar(seg.max_protection),
+            ))
+            print("{:16} {:12} {:9} {:9} {:25} {}".format( "Name", "VirtAddr", "RawAddr", "Size", "type", "Md5"))
+            for s in binary.sections:
+                if s.segment == seg:
+                    m = hashlib.md5()
+                    m.update(bytearray(s.content))
+                    print("{:16} {:12} {:9} {:<9} {:25} {}".format(
+                        s.name,
+                        hex(s.virtual_address),
+                        hex(s.offset),
+                        s.size,
+                        str(s.type).replace("SECTION_TYPES.", ""),
+                        m.hexdigest()
+                    ))
+            print("")
 
         # Imports (binding infos)
         print("Imports")
@@ -124,14 +140,6 @@ class PluginInfo(Plugin):
             for f in binary.exported_functions:
                 print(f.name)
 
-
-    def add_arguments(self, parser):
-        parser.add_argument('--json', '-j', action='store_true', help='Show everything in JSON format')
-        #parser.add_argument('--imports', '-i',  action='store_true', help='Display imports only')
-        #parser.add_argument('--exports', '-e',  action='store_true', help='Display exports only')
-        #parser.add_argument('--resources', '-r',  action='store_true', help='Display resources only')
-        #parser.add_argument('--full', '-f',  action='store_true', help='Full dump of all pefile infos')
-        self.parser = parser
 
     def run(self, args, binary, data):
         # TODO: test if FAT binary
