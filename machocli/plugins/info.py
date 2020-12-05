@@ -8,6 +8,30 @@ class PluginInfo(Plugin):
     name = "info"
     description = "Extract info from the MACH-O file"
 
+    def display_ar(flags):
+        """
+        Show access rights of a section
+        """
+        res = ""
+        if (flags & 0x1) == 1:
+            res += "R"
+        else:
+            res += "-"
+        if (flags & 0x2) == 2:
+            res += "W"
+        else:
+            res += "-"
+        if (flags & 0x4) == 4:
+            res += "X"
+        else:
+            res += "-"
+        return res
+
+    def find_section(self, binary, addr):
+        for s in binary.sections:
+            if addr >= s.virtual_address and addr <= (s.virtual_address + s.size):
+                return s
+
     def display_hashes(self, data):
         """Display md5, sha1 and sh256 of the data given"""
         for algo in ["md5", "sha1", "sha256"]:
@@ -21,7 +45,11 @@ class PluginInfo(Plugin):
         """
         print("{:15} {}".format("Type:", binary.header.cpu_type.name))
         try:
-            print("Entry point:\t0x%x" % binary.entrypoint)
+            s = self.find_section(binary, binary.entrypoint)
+            if s:
+                print("Entry point:\t0x{:x} (Section {})".format(binary.entrypoint, s.name))
+            else:
+                print("Entry point:\t0x{:x} (Unknown section)".format(binary.entrypoint))
         except lief.not_found:
             pass
         try:
@@ -35,7 +63,7 @@ class PluginInfo(Plugin):
         print("Commands")
         print("=" * 80)
         for c in binary.commands:
-            if c.command.name == "SEGMENT_64":
+            if c.command.name in ("SEGMENT_64", "SEGMENT"):
                 print("{:20} {:10} {:5} {:14} {}".format(
                     c.command.name,
                     c.name if hasattr(c, 'name') else '',
@@ -64,11 +92,11 @@ class PluginInfo(Plugin):
         # Sections
         print("Sections")
         print("=" * 80)
-        print("%-16s %-9s %-12s %-9s %-9s %-25s %s" % ( "Name", "Segname", "VirtAddr", "RawAddr", "Size", "type", "Md5"))
+        print("{:16} {:9} {:12} {:9} {:9} {:25} {}".format( "Name", "Segname", "VirtAddr", "RawAddr", "Size", "type", "Md5"))
         for s in binary.sections:
             m = hashlib.md5()
             m.update(bytearray(s.content))
-            print("%-16s %-9s %-12s %-9s %-9s %-25s %s" % (
+            print("{:16} {:9} {:12} {:9} {:<9} {:25} {}".format(
                 s.name,
                 s.segment.name,
                 hex(s.virtual_address),

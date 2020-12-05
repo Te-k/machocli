@@ -21,9 +21,9 @@ setup(
     install_requires=reqs,
     license='MIT',
     python_requires='>=3.5',
-    packages=['machocli', 'machocli.plugins', 'machocli.lib'],
+    packages=['machocli', 'machocli.plugins', 'machocli.lib', 'machocli.data'],
     package_dir={'machocli.lib': 'machocli/lib'},
-    #package_data={'machocli': ['pecli/data/*.yar']},
+    package_data={'machocli': ['machocli/data/*.yar']},
     entry_points= {
         'console_scripts': [ 'machocli=machocli.main:main' ]
     },
