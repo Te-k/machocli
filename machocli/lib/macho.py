@@ -13,6 +13,7 @@ CODE_INDEX = {
     0x10000: 'SignatureSlot'
 }
 
+
 def read_int(b):
     return struct.unpack('>I', b.read(4))[0]
 
@@ -22,7 +23,6 @@ def extract_certificates(binary, data):
     Extract and parse certificates from the file
     Largely inspired from macholibre
     """
-    header = b"\xfa\xde\x0c\x05"
     cdata = None
     res = {}
     for c in binary.commands:
@@ -34,7 +34,7 @@ def extract_certificates(binary, data):
         print("Invalid Code signature header, weird")
         return {}
     b = BytesIO(cdata)
-    _ = b.read(4) # Magic number
+    _ = b.read(4)  # Magic number
     size = read_int(b)
     count = read_int(b)
 
@@ -75,7 +75,6 @@ def extract_certificates(binary, data):
                         else:
                             subject[name] = str(value.parsed)
 
-
                 issuer = {}
 
                 for rdn in cert.issuer.chosen:
@@ -104,13 +103,3 @@ def extract_certificates(binary, data):
                 })
 
     return res
-
-
-
-
-
-
-
-
-
-

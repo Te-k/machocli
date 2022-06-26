@@ -1,8 +1,6 @@
 #! /usr/bin/env python
-import datetime
 import yara
 import os
-import copy
 from machocli.plugins.base import Plugin
 
 
@@ -22,7 +20,6 @@ class PluginCrypto(Plugin):
                 vaddr = s.virtual_address + addr - s.offset
                 return (s.name, vaddr)
         return (None, None)
-
 
     def run(self, args, binary, data):
         crypto_db = os.path.dirname(os.path.realpath(__file__))[:-7] + "data/yara-crypto.yar"

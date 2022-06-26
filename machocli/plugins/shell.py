@@ -1,8 +1,4 @@
 #! /usr/bin/env python
-import sys
-import json
-import hashlib
-import lief
 from machocli.plugins.base import Plugin
 from IPython import embed
 

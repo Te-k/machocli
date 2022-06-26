@@ -24,8 +24,8 @@ setup(
     packages=['machocli', 'machocli.plugins', 'machocli.lib', 'machocli.data'],
     package_dir={'machocli.lib': 'machocli/lib'},
     package_data={'machocli': ['machocli/data/*.yar']},
-    entry_points= {
-        'console_scripts': [ 'machocli=machocli.main:main' ]
+    entry_points={
+        'console_scripts': ['machocli=machocli.main:main']
     },
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-import sys
 import lief
 from machocli.plugins.base import Plugin
 

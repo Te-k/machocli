@@ -11,12 +11,11 @@ class PluginInfo(Plugin):
 
     def add_arguments(self, parser):
         parser.add_argument('--json', '-j', action='store_true', help='Show everything in JSON format')
-        #parser.add_argument('--imports', '-i',  action='store_true', help='Display imports only')
-        #parser.add_argument('--exports', '-e',  action='store_true', help='Display exports only')
-        #parser.add_argument('--resources', '-r',  action='store_true', help='Display resources only')
-        #parser.add_argument('--full', '-f',  action='store_true', help='Full dump of all pefile infos')
+        # parser.add_argument('--imports', '-i',  action='store_true', help='Display imports only')
+        # parser.add_argument('--exports', '-e',  action='store_true', help='Display exports only')
+        # parser.add_argument('--resources', '-r',  action='store_true', help='Display resources only')
+        # parser.add_argument('--full', '-f',  action='store_true', help='Full dump of all pefile infos')
         self.parser = parser
-
 
     def display_ar(self, flags):
         """
@@ -111,7 +110,7 @@ class PluginInfo(Plugin):
                 self.display_ar(seg.init_protection),
                 self.display_ar(seg.max_protection),
             ))
-            print("{:16} {:12} {:9} {:9} {:25} {}".format( "Name", "VirtAddr", "RawAddr", "Size", "type", "Md5"))
+            print("{:16} {:12} {:9} {:9} {:25} {}".format("Name", "VirtAddr", "RawAddr", "Size", "type", "Md5"))
             for s in binary.sections:
                 if s.segment == seg:
                     m = hashlib.md5()
@@ -142,7 +141,6 @@ class PluginInfo(Plugin):
             print("=" * 80)
             for f in binary.exported_functions:
                 print(f.name)
-
 
     def run(self, args, binary, data):
         # TODO: test if FAT binary
@@ -179,6 +177,3 @@ class PluginInfo(Plugin):
                 self.display_hashes(data)
                 print("{:15} {} bytes".format("Size:", len(data)))
                 self.display_macho(binary)
-
-
-

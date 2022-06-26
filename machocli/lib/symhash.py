@@ -1,5 +1,6 @@
 from hashlib import md5
 
+
 def symhash(binary):
     """
     Compute symhash

@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-import sys
 import lief
 import json
 from machocli.plugins.base import Plugin
