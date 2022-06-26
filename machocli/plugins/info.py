@@ -130,7 +130,10 @@ class PluginInfo(Plugin):
         print("=" * 80)
         for f in binary.imported_symbols:
             try:
-                print("{:35s} {}".format(f.name, f.binding_info.library.name))
+                if f.binding_info:
+                    print("{:35s} {}".format(f.name, f.binding_info.library.name))
+                else:
+                    print("{:35s} {}".format(f.name, ""))
             except lief.not_found:
                 print(f.name)
 
