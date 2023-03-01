@@ -12,9 +12,11 @@ class PluginUnfat(Plugin):
 
     def run(self, args, binary, data):
         if isinstance(binary, lief.MachO.FatBinary):
+            i = 0
             for c in binary:
-                fname = args.MACHOFILE + "_" + c.header.cpu_type.name
+                fname = args.MACHOFILE + "_" + c.header.cpu_type.name + "_" + str(i)
                 c.write(fname)
                 print("{} extracted".format(fname))
+                i += 1
         else:
             print("Not a fat binary!")

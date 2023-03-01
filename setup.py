@@ -3,10 +3,6 @@ from setuptools import setup
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-with open('requirements.txt') as f:
-    reqs = f.read().split('\n')
-    reqs.remove('')
-
 setup(
     name='machocli',
     version='0.1.1',
@@ -18,7 +14,10 @@ setup(
     author_email='tek@randhome.io',
     keywords='malware',
     include_package_data=True,
-    install_requires=reqs,
+    install_requires=[
+        "lief",
+        "asn1crypto==1.4.0"
+    ],
     license='MIT',
     python_requires='>=3.5',
     packages=['machocli', 'machocli.plugins', 'machocli.lib', 'machocli.data'],

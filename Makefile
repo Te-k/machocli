@@ -1,7 +1,8 @@
 PWD = $(shell pwd)
 
-test:
-	pytest
+check:
+	flake8
+	ruff check --ignore E501 -q .
 
 clean:
 	rm -rf $(PWD)/build $(PWD)/dist $(PWD)/machocli.egg-info
